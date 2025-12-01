@@ -1,0 +1,17 @@
+/* AutoImage.css */
+
+.auto-image-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+  }
+  
+  .auto-image-container img {
+    width: 80%;        /* 👉 width increase / decrease here */
+    max-width: 800px;  /* 👉 maximum width */
+    border-radius: 12px;
+    transition: opacity 0.6s ease-in-out;
+    opacity: 1;
+  }
+  

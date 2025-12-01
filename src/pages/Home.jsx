@@ -1,5 +1,9 @@
+// src/pages/Home.jsx
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import "./Home.css"; 
+import AutoImage from "../components/AutoImage";
+
 
 const quotes = [
   "The only bad workout is the one that didn’t happen.",
@@ -14,24 +18,32 @@ const Home = () => {
   const [quote, setQuote] = useState("");
 
   useEffect(() => {
-    // Pick a random quote when page loads
     const randomIndex = Math.floor(Math.random() * quotes.length);
     setQuote(quotes[randomIndex]);
   }, []);
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Welcome to Fitness Tracker</h1>
-      <p>Track workouts, nutrition, yoga sessions, and find expert trainers!</p>
+    <div className="home-container">
 
-      <div style={{ margin: "20px 0", display: "flex", gap: "15px" }}>
+      <h1 className="home-title">
+        Welcome to <span>My Fit Hub</span>
+      </h1>
+
+      <p className="home-subtext">
+        Track workouts, nutrition, yoga sessions, and find expert trainers!
+      </p>
+
+      {/* Auto-changing images */}
+      <AutoImage />
+
+      <div className="nav-buttons">
         <Link to="/trainers">Meet Our Trainers</Link>
         <Link to="/workouts">Start Workouts</Link>
         <Link to="/nutrition">Nutrition Plan</Link>
         <Link to="/yoga">Yoga Sessions</Link>
       </div>
 
-      <div style={{ margin: "20px 0" }}>
+      <div className="features">
         <h2>Why Choose Us?</h2>
         <ul>
           <li>Personalized Workouts</li>
@@ -40,10 +52,11 @@ const Home = () => {
         </ul>
       </div>
 
-      <div style={{ marginTop: "30px", padding: "20px", backgroundColor: "#f2f2f2", borderRadius: "10px" }}>
-        <h2></h2>
-        <p style={{ fontStyle: "italic", fontSize: "18px" }}>"{quote}"</p>
+      <div className="quote-box">
+        <h2>Today's Motivation</h2>
+        <p>"{quote}"</p>
       </div>
+
     </div>
   );
 };

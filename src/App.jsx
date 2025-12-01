@@ -2,6 +2,10 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // Components
 import Navbar from "./components/Navbar";
+import Payment from "./components/Payment";
+
+
+
 
 // Pages
 import Home from "./pages/Home";
@@ -11,7 +15,7 @@ import Nutrition from "./pages/Nutrition";
 import Yoga from "./pages/Yoga";
 import About from "./pages/About";
 import Login from "./pages/Login";
-
+ 
 function App() {
   return (
     <Router>
@@ -27,9 +31,11 @@ function App() {
         <Route path="/yoga" element={<Yoga />} />
         <Route path="/about" element={<About />} />
         <Route path="/login" element={<Login />} />
+
+       {/*  Payment Route */}
+        <Route path="/payment" element={<Payment />} />
       </Routes>
     </Router>
   );
 }
-
 export default App;

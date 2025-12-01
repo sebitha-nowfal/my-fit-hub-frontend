@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api";
+export const API_URL = "http://localhost:5000";
+
 
 export const fetchTrainers = async () => (await axios.get(`${API_URL}/trainers`)).data;
 export const fetchWorkouts = async () => (await axios.get(`${API_URL}/workouts`)).data;

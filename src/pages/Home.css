@@ -1,0 +1,124 @@
+/* Main Container */
+.home-container {
+    width: 100%;
+    min-height: 100vh;
+    padding: 40px 20px;
+    box-sizing: border-box;
+    background: #f8f9fa;
+  }
+  
+  /* Title Section */
+  .home-title {
+    font-size: 40px;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  
+  .home-title span {
+    color: #007bff;
+  }
+  
+  /* Subtitle */
+  .home-subtext {
+    font-size: 18px;
+    color: #555;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  /* Navigation Buttons */
+  .nav-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 40px;
+  }
+  
+  .nav-buttons a {
+    text-decoration: none;
+    background-color: #007bff;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: 0.3s;
+  }
+  
+  .nav-buttons a:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Features Section */
+  .features {
+    max-width: 650px;
+    margin: 0 auto;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+  
+  .features h2 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 15px;
+  }
+  
+  .features ul {
+    padding-left: 20px;
+  }
+  
+  .features li {
+    line-height: 1.7;
+    margin-bottom: 8px;
+    font-size: 17px;
+    color: #444;
+  }
+  
+  /* Quote Box */
+  .quote-box {
+    margin-top: 40px;
+    max-width: 600px;
+    background: #eef1f3;
+    padding: 25px;
+    border-radius: 12px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    border: 1px solid #ddd;
+  }
+  
+  .quote-box h2 {
+    font-size: 22px;
+    margin-bottom: 10px;
+  }
+  
+  .quote-box p {
+    font-size: 19px;
+    font-style: italic;
+    color: #333;
+  }
+  
+  /* Responsive (Mobile) */
+  @media (max-width: 600px) {
+    .home-title {
+      font-size: 30px;
+    }
+  
+    .home-subtext {
+      font-size: 16px;
+    }
+  
+    .nav-buttons a {
+      width: 100%;
+      text-align: center;
+    }
+  
+    .features, .quote-box {
+      width: 100%;
+    }
+  }
+  

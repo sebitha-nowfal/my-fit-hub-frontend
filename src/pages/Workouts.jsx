@@ -1,116 +1,179 @@
-import { useEffect, useState } from "react";
-import WorkoutCard from "../components/WorkoutCard";
-import { fetchWorkouts } from "../services/api";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
-// Modal Component
-const Modal = ({ workout, onClose }) => {
-  if (!workout) return null;
-
-  return (
-    <div style={modalStyles.overlay}>
-      <div style={modalStyles.modal}>
-        <h2>{workout.name}</h2>
-        <p><strong>Type:</strong> {workout.type}</p>
-        <p><strong>Duration:</strong> {workout.duration} mins</p>
-        <p><strong>Difficulty:</strong> {workout.difficulty}</p>
-        <p><strong>Description:</strong> {workout.description}</p>
-        <button onClick={onClose} style={modalStyles.button}>Close</button>
-      </div>
-    </div>
-  );
-};
-
-const Workouts = () => {
-  const [workouts, setWorkouts] = useState([]);
-  const [search, setSearch] = useState("");
-  const [filterType, setFilterType] = useState("");
-  const [selectedWorkout, setSelectedWorkout] = useState(null);
-
-  useEffect(() => {
-    const getWorkouts = async () => {
-      const data = await fetchWorkouts();
-      setWorkouts(data);
-    };
-    getWorkouts();
-  }, []);
-
-  // Filter + Search
-  const filteredWorkouts = workouts.filter(w => {
-    return (
-      w.name.toLowerCase().includes(search.toLowerCase()) &&
-      (filterType === "" || w.type === filterType)
-    );
+export default function Workout() {
+  const [formData, setFormData] = useState({
+    workoutName: "",
+    duration: "",
+    caloriesBurned: "",
+    notes: "",
   });
 
+  const [workouts, setWorkouts] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  // Fetch all workouts
+  const fetchWorkouts = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get("http://localhost:5000/api/workout", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setWorkouts(res.data);
+    } catch (error) {
+      console.error("Error fetching workouts:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchWorkouts();
+  }, []);
+
+  // Handle input
+  const handleChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  // Submit workout
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.post(
+        "http://localhost:5000/api/workout",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setFormData({
+        workoutName: "",
+        duration: "",
+        caloriesBurned: "",
+        notes: "",
+      });
+
+      fetchWorkouts();
+    } catch (error) {
+      console.error("Error adding workout:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Delete workout
+  const deleteWorkout = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      await axios.delete(`http://localhost:5000/api/workout/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      fetchWorkouts();
+    } catch (error) {
+      console.error("Error deleting workout:", error);
+    }
+  };
+
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Workouts</h1>
+    <div className="max-w-5xl mx-auto mt-10 p-4">
+      <h1 className="text-3xl font-bold text-center mb-6 text-blue-600">
+        Workout Tracker
+      </h1>
 
-      {/* Search Input */}
-      <input
-        type="text"
-        placeholder="Search workouts..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        style={{ padding: "5px", marginRight: "10px" }}
-      />
-
-      {/* Filter Dropdown */}
-      <select
-        value={filterType}
-        onChange={(e) => setFilterType(e.target.value)}
-        style={{ padding: "5px" }}
+      {/* Form */}
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white shadow-lg p-6 rounded-lg mb-10"
       >
-        <option value="">All Types</option>
-        <option value="Cardio">Cardio</option>
-        <option value="Strength">Strength</option>
-        <option value="Yoga">Yoga</option>
-        <option value="Flexibility">Flexibility</option>
-      </select>
+        <h2 className="text-xl font-semibold mb-4">Add Workout</h2>
 
-      {/* Workouts Grid */}
-      <div style={{ display: "flex", flexWrap: "wrap", marginTop: "20px" }}>
-        {filteredWorkouts.map(w => (
-          <div key={w._id} onClick={() => setSelectedWorkout(w)} style={{ cursor: "pointer" }}>
-            <WorkoutCard workout={w} />
-          </div>
-        ))}
-      </div>
+        <div className="grid md:grid-cols-2 gap-4">
+          <input
+            type="text"
+            name="workoutName"
+            placeholder="Workout Name"
+            value={formData.workoutName}
+            onChange={handleChange}
+            className="border p-3 rounded w-full"
+            required
+          />
 
-      {/* Modal */}
-      <Modal workout={selectedWorkout} onClose={() => setSelectedWorkout(null)} />
+          <input
+            type="number"
+            name="duration"
+            placeholder="Duration (min)"
+            value={formData.duration}
+            onChange={handleChange}
+            className="border p-3 rounded w-full"
+            required
+          />
+
+          <input
+            type="number"
+            name="caloriesBurned"
+            placeholder="Calories Burned"
+            value={formData.caloriesBurned}
+            onChange={handleChange}
+            className="border p-3 rounded w-full"
+            required
+          />
+
+          <input
+            type="text"
+            name="notes"
+            placeholder="Notes"
+            value={formData.notes}
+            onChange={handleChange}
+            className="border p-3 rounded w-full"
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="mt-5 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
+        >
+          {loading ? "Saving..." : "Add Workout"}
+        </button>
+      </form>
+
+      {/* Workout List */}
+      <h2 className="text-2xl font-semibold mb-4">Your Workouts</h2>
+
+      {workouts.length === 0 ? (
+        <p className="text-center text-gray-500">No workouts added yet.</p>
+      ) : (
+        <div className="grid md:grid-cols-2 gap-4">
+          {workouts.map((item) => (
+            <div
+              key={item._id}
+              className="bg-white shadow-lg p-4 rounded-lg border"
+            >
+              <h3 className="text-lg font-bold">{item.workoutName}</h3>
+              <p>⏱ Duration: {item.duration} min</p>
+              <p>🔥 Calories Burned: {item.caloriesBurned}</p>
+              {item.notes && <p className="italic">📝 {item.notes}</p>}
+
+              <button
+                onClick={() => deleteWorkout(item._id)}
+                className="mt-3 bg-red-600 text-white px-4 py-1 rounded hover:bg-red-700"
+              >
+                Delete
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
-};
-
-export default Workouts;
-
-// Modal styles
-const modalStyles = {
-  overlay: {
-    position: "fixed",
-    top: 0, left: 0, right: 0, bottom: 0,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 1000
-  },
-  modal: {
-    backgroundColor: "#fff",
-    padding: "20px",
-    borderRadius: "8px",
-    width: "400px",
-    maxHeight: "80vh",
-    overflowY: "auto"
-  },
-  button: {
-    marginTop: "10px",
-    padding: "8px 15px",
-    backgroundColor: "#333",
-    color: "#fff",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer"
-  }
-};
+}

@@ -1,50 +1,44 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import logoImg from "../assets/logo.png";
+import "./Navbar.css"; // CSS file
 
 const Navbar = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
-    <nav style={styles.navbar}>
-      <div style={styles.logo}>
-        <Link to="/" style={styles.link}>LOGO</Link>
+    <nav className="navbar">
+      
+      {/* Logo */}
+      <div className="navbar-logo">
+        <Link to="/">
+          <img src={logoImg} alt="Logo" className="logo-img" />
+        </Link>
       </div>
 
-      <div style={styles.navLinks}>
-        <Link to="/" style={styles.link}>Home</Link>
-        <Link to="/workouts" style={styles.link}>Workouts</Link>
-        <Link to="/nutrition" style={styles.link}>Nutrition</Link>
-        <Link to="/yoga" style={styles.link}>Yoga</Link>
-        <Link to="/trainers" style={styles.link}>Trainer</Link>
-        <Link to="/about" style={styles.link}>About</Link>
+      {/* Hamburger Icon */}
+      <div 
+        className="hamburger" 
+        onClick={() => setMenuOpen(!menuOpen)}
+      >
+        <span></span>
+        <span></span>
+        <span></span>
       </div>
 
-      <div style={styles.login}>
-        <Link to="/login" style={styles.link}>LOGIN</Link>
+      {/* Nav Links */}
+      <div className={`nav-links ${menuOpen ? "open" : ""}`}>
+        <Link to="/" onClick={() => setMenuOpen(false)}>Home</Link>
+        <Link to="/workouts" onClick={() => setMenuOpen(false)}>Workouts</Link>
+        <Link to="/nutrition" onClick={() => setMenuOpen(false)}>Nutrition</Link>
+        <Link to="/yoga" onClick={() => setMenuOpen(false)}>Yoga</Link>
+        <Link to="/trainers" onClick={() => setMenuOpen(false)}>Trainer</Link>
+        <Link to="/about" onClick={() => setMenuOpen(false)}>About</Link>
+        <Link to="/login" className="login-btn" onClick={() => setMenuOpen(false)}>LOGIN</Link>
       </div>
+
     </nav>
   );
-};
-
-const styles = {
-  navbar: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "10px 20px",
-    backgroundColor: "#333",
-    color: "#fff"
-  },
-  logo: {
-    fontWeight: "bold",
-    fontSize: "20px"
-  },
-  navLinks: {
-    display: "flex",
-    gap: "15px"
-  },
-  login: {},
-  link: {
-    color: "#fff",
-    textDecoration: "none"
-  }
 };
 
 export default Navbar;

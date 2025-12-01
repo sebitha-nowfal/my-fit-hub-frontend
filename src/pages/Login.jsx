@@ -1,53 +1,57 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+// src/components/Login.jsx
+import React, { useState } from "react";
+import "./Login.css";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate();
+  const [success, setSuccess] = useState("");
 
-  const handleLogin = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setError("");
 
+    // Basic validation
     if (!email || !password) {
-      setError("Please fill in all fields");
+      setError("Please fill in all fields.");
+      setSuccess("");
       return;
     }
 
-    try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", { email, password });
-      localStorage.setItem("token", res.data.token);
-      navigate("/"); // redirect to home page
-    } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
+    // Mock login (replace with real API call)
+    if (email === "user@example.com" && password === "123456") {
+      setSuccess("Login successful!");
+      setError("");
+    } else {
+      setError("Invalid email or password.");
+      setSuccess("");
     }
   };
 
   return (
-    <div style={{ padding: "20px", maxWidth: "400px", margin: "auto" }}>
+    <div className="login-container">
       <h1>Login</h1>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+      <form onSubmit={handleSubmit} className="login-form">
+        {error && <p className="error">{error}</p>}
+        {success && <p className="success">{success}</p>}
+
+        <label>Email:</label>
         <input
           type="email"
-          placeholder="Email"
           value={email}
-          onChange={e => setEmail(e.target.value)}
-          required
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Enter your email"
         />
+
+        <label>Password:</label>
         <input
           type="password"
-          placeholder="Password"
           value={password}
-          onChange={e => setPassword(e.target.value)}
-          required
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Enter your password"
         />
-        <button type="submit" style={{ padding: "10px", backgroundColor: "#333", color: "#fff", border: "none", cursor: "pointer" }}>
-          Login
-        </button>
+
+        <button type="submit">Login</button>
       </form>
     </div>
   );
